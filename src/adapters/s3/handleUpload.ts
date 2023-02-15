@@ -3,6 +3,7 @@ import path from 'path'
 import type * as AWS from '@aws-sdk/client-s3'
 import type { CollectionConfig } from 'payload/types'
 import type stream from 'stream'
+import { v4 as uuidv4 } from 'uuid'
 
 import { Upload } from '@aws-sdk/lib-storage'
 import type { HandleUpload } from '../../types'
@@ -24,8 +25,10 @@ export const getHandleUpload = ({
   prefix = '',
 }: Args): HandleUpload => {
   return async ({ data, file }) => {
-    const fileKey = path.posix.join(prefix, file.filename)
-
+    const fname = file.filename
+    const ext = fname.split('.').reverse()[0]
+    const newfname = uuidv4() + '.' + ext
+    const fileKey = path.posix.join(prefix, data.organization, newfname)
     const fileBufferOrStream: Buffer | stream.Readable = file.tempFilePath
       ? fs.createReadStream(file.tempFilePath)
       : file.buffer
@@ -38,7 +41,18 @@ export const getHandleUpload = ({
         ACL: acl,
         ContentType: file.mimeType,
       })
-
+      await getStorageClient().putObjectTagging({
+        Bucket: bucket,
+        Key: fileKey,
+        Tagging: {
+          TagSet: [
+            {
+              Key: 'name',
+              Value: fname,
+            },
+          ],
+        },
+      })
       return data
     }
 

@@ -38,6 +38,11 @@ export const Media: CollectionConfig = {
       label: 'Alt Text',
       type: 'text',
     },
+    {
+      name: 'organization',
+      label: 'Organization',
+      type: 'text',
+    },
 
     // The following fields should be able to be merged in to default upload fields
     urlField,

@@ -13,6 +13,11 @@ const Users: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      name: 'organization',
+      label: 'Organization',
+      type: 'text',
+    },
+    {
       name: 'background',
       type: 'upload',
       relationTo: 'media',
