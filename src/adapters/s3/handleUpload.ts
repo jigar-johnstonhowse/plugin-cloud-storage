@@ -27,7 +27,8 @@ export const getHandleUpload = ({
   return async ({ data, file }) => {
     const fname = file.filename
     const ext = fname.split('.').reverse()[0]
-    const newfname = uuidv4() + '.' + ext
+    const uuid = uuidv4()
+    const newfname = uuid + '.' + ext
     const fileKey = path.posix.join(prefix, data.organization, newfname)
     const fileBufferOrStream: Buffer | stream.Readable = file.tempFilePath
       ? fs.createReadStream(file.tempFilePath)
@@ -53,6 +54,8 @@ export const getHandleUpload = ({
           ],
         },
       })
+      data.uuid = uuid
+      data.uuidFileName = newfname
       return data
     }
 

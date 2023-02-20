@@ -43,6 +43,14 @@ export const Media: CollectionConfig = {
       label: 'Organization',
       type: 'text',
     },
+    {
+      name: 'uuid',
+      label: 'uuid',
+      type: 'text',
+      admin: {
+        hidden: true,
+      },
+    },
 
     // The following fields should be able to be merged in to default upload fields
     urlField,
